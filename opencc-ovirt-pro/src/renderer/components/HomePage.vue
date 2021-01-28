@@ -261,11 +261,15 @@ export default {
 }
 /* 虚拟机卡片 */
 .card-list {
-  float: left;
-  padding-top: 80px;
+  height: 100%;
+  /* 水平居中 : justify-content: flex-start|flex-end|center|
+                space-between|space-around|initial|inherit; */
+  justify-content: space-around;
+  /* 垂直居中 */
+  display: flex;
+  align-items: center;
 }
 .card-list .el-card {
-  margin-left: 54px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 .card-list .el-card:hover {
