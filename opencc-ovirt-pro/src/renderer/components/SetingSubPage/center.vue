@@ -88,7 +88,7 @@ export default {
 
       center: {
         ip: '',
-        port: '8443',
+        port: '443',
       },
       btnAddMsg: '添加中心',
       commitBtnDisable: false, // 禁用添加中心按钮
