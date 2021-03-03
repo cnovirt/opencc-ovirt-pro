@@ -29,7 +29,7 @@ ipcMain.on('getallvminfo', (data, args) => {
     .then((res) => {
       if (res.status === 200) {
         let vmsinfo = []
-        let vmList = res.data
+        let vmList = res.data['vm']
 
         for (let i = 0; i < vmList.length; i++) {
           let tmp_vminfo = {}

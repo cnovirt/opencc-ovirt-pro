@@ -83,18 +83,12 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          num: '1',
-          addr: '192.168.8.111',
-          port: '443',
-          domain: 'internal',
-          isInput: false,
-        },
+        // { num: '1', addr: '192.168.8.111', port: '443', domain: 'internal', isInput: false, },
       ],
 
       center: {
         ip: '',
-        port: '443',
+        port: '8443',
       },
       btnAddMsg: '添加中心',
       commitBtnDisable: false, // 禁用添加中心按钮
