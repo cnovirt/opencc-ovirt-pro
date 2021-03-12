@@ -181,6 +181,11 @@
               </optional>
               <optional>
                 <element name='nat'>
+                  <optional>
+                    <attribute name="ipv6">
+                      <ref name="virYesNo"/>
+                    </attribute>
+                  </optional>
                   <interleave>
                     <optional>
                       <element name='address'>
@@ -371,6 +376,16 @@
                       <element name="range">
                         <attribute name="start"><ref name="ipAddr"/></attribute>
                         <attribute name="end"><ref name="ipAddr"/></attribute>
+                        <interleave>
+                          <optional>
+                            <element name="lease">
+                              <attribute name="expiry"><ref name="unsignedLong"/></attribute>
+                              <optional>
+                                <attribute name="unit"><ref name="leaseUnit"/></attribute>
+                              </optional>
+                            </element>
+                          </optional>
+                        </interleave>
                       </element>
                     </zeroOrMore>
                     <zeroOrMore>
@@ -388,6 +403,16 @@
                           <attribute name="name"><text/></attribute>
                         </choice>
                         <attribute name="ip"><ref name="ipAddr"/></attribute>
+                        <interleave>
+                          <optional>
+                            <element name="lease">
+                              <attribute name="expiry"><ref name="unsignedLong"/></attribute>
+                              <optional>
+                                <attribute name="unit"><ref name="leaseUnit"/></attribute>
+                              </optional>
+                            </element>
+                          </optional>
+                        </interleave>
                       </element>
                     </zeroOrMore>
                     <optional>

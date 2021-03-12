@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <api name='libvirt'>
   <files>
     <file name='libvirt-common'>
@@ -223,6 +223,7 @@
      <exports symbol='VIR_DOMAIN_JOB_DISK_TOTAL' type='macro'/>
      <exports symbol='VIR_DOMAIN_JOB_DOWNTIME' type='macro'/>
      <exports symbol='VIR_DOMAIN_JOB_DOWNTIME_NET' type='macro'/>
+     <exports symbol='VIR_DOMAIN_JOB_ERRMSG' type='macro'/>
      <exports symbol='VIR_DOMAIN_JOB_MEMORY_BPS' type='macro'/>
      <exports symbol='VIR_DOMAIN_JOB_MEMORY_CONSTANT' type='macro'/>
      <exports symbol='VIR_DOMAIN_JOB_MEMORY_DIRTY_RATE' type='macro'/>
@@ -2088,13 +2089,13 @@
     </file>
   </files>
   <symbols>
-    <macro name='LIBVIR_CHECK_VERSION' file='libvirt-common'>
+    <macro name='LIBVIR_CHECK_VERSION' file='libvirt-common' params='major,minor,micro' raw='((major) * 1000000 + (minor) * 1000 + (micro) &lt;= LIBVIR_VERSION_NUMBER)'>
       <info><![CDATA[Macro for developers to easily check what version of the library their code is compiling against. e.g. #if LIBVIR_CHECK_VERSION(1,1,3) // some code that only works in 1.1.3 and newer #endif]]></info>
       <arg name='major' info='major component of the version number'/>
       <arg name='minor' info='minor component of the version number'/>
       <arg name='micro' info='micro component of the version number'/>
     </macro>
-    <macro name='LIBVIR_VERSION_NUMBER' file='libvirt-common'>
+    <macro name='LIBVIR_VERSION_NUMBER' file='libvirt-common' raw='6006000'>
       <info><![CDATA[Macro providing the version of the library as version * 1,000,000 + minor * 1000 + micro]]></info>
     </macro>
     <macro name='VIR_CONNECT_IDENTITY_GROUP_NAME' file='libvirt-host' string='group-name'>
@@ -2124,25 +2125,25 @@
     <macro name='VIR_CONNECT_IDENTITY_X509_DISTINGUISHED_NAME' file='libvirt-host' string='x509-distinguished-name'>
       <info><![CDATA[The TLS x509 certificate distinguished named as VIR_TYPED_PARAM_STRING]]></info>
     </macro>
-    <macro name='VIR_COPY_CPUMAP' file='libvirt-domain'>
+    <macro name='VIR_COPY_CPUMAP' file='libvirt-domain' params='cpumaps,maplen,vcpu,cpumap' raw='memcpy(cpumap, VIR_GET_CPUMAP(cpumaps, maplen, vcpu), maplen)'>
       <info><![CDATA[This macro is to be used in conjunction with virDomainGetVcpus() and virDomainPinVcpu() APIs. VIR_COPY_CPUMAP macro extracts the cpumap of the specified vcpu from cpumaps array and copies it into cpumap to be used later by virDomainPinVcpu() API.]]></info>
       <arg name='cpumaps' info='pointer to an array of cpumap (in 8-bit bytes) (IN)'/>
       <arg name='maplen' info='the length (in bytes) of one cpumap'/>
       <arg name='vcpu' info='the virtual CPU number'/>
       <arg name='cpumap' info='pointer to a cpumap (in 8-bit bytes) (OUT) This cpumap must be previously allocated by the caller (ie: malloc(maplen))'/>
     </macro>
-    <macro name='VIR_CPU_MAPLEN' file='libvirt-domain'>
+    <macro name='VIR_CPU_MAPLEN' file='libvirt-domain' params='cpu' raw=''>
       <info><![CDATA[This macro is to be used in conjunction with virDomainPinVcpu() API. It returns the length (in bytes) required to store the complete CPU map between a single virtual & all physical CPUs of a domain.]]></info>
       <arg name='cpu' info='number of physical CPUs'/>
     </macro>
-    <macro name='VIR_CPU_USABLE' file='libvirt-domain'>
+    <macro name='VIR_CPU_USABLE' file='libvirt-domain' params='cpumaps,maplen,vcpu,cpu' raw='VIR_CPU_USED(VIR_GET_CPUMAP(cpumaps, maplen, vcpu), cpu)'>
       <info><![CDATA[This macro is to be used in conjunction with virDomainGetVcpus() API. VIR_CPU_USABLE macro returns a non-zero value (true) if the cpu is usable by the vcpu, and 0 otherwise.]]></info>
       <arg name='cpumaps' info='pointer to an array of cpumap (in 8-bit bytes) (IN)'/>
       <arg name='maplen' info='the length (in bytes) of one cpumap'/>
       <arg name='vcpu' info='the virtual CPU number'/>
       <arg name='cpu' info='the physical CPU number'/>
     </macro>
-    <macro name='VIR_CPU_USED' file='libvirt-domain'>
+    <macro name='VIR_CPU_USED' file='libvirt-domain' params='cpumap,cpu' raw='((cpumap)[(cpu) / 8] &amp; (1 &lt;&lt; ((cpu) % 8)))'>
       <info><![CDATA[This macro can be used in conjunction with virNodeGetCPUMap() API. It returns non-zero if the bit of the related CPU is set.]]></info>
       <arg name='cpumap' info='pointer to a bit map of real CPUs (in 8-bit bytes) (IN)'/>
       <arg name='cpu' info='the physical CPU number'/>
@@ -2183,7 +2184,7 @@
     <macro name='VIR_DOMAIN_BLKIO_DEVICE_WRITE_IOPS' file='libvirt-domain' string='device_write_iops_sec'>
       <info><![CDATA[Macro for the blkio tunable throttle.write_iops_device: it represents the number of writing the block device per second, as a string. The string is parsed as a series of /path/to/device, write_iops elements, separated by ','.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_BLKIO_FIELD_LENGTH' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_BLKIO_FIELD_LENGTH' file='libvirt-domain' raw='VIR_TYPED_PARAM_FIELD_LENGTH'>
       <info><![CDATA[Macro providing the field length of virBlkioParameter.  Provided for backwards compatibility; VIR_TYPED_PARAM_FIELD_LENGTH is the preferred value since 0.9.2.]]></info>
     </macro>
     <macro name='VIR_DOMAIN_BLKIO_WEIGHT' file='libvirt-domain' string='weight'>
@@ -2261,7 +2262,7 @@
     <macro name='VIR_DOMAIN_BLOCK_STATS_ERRS' file='libvirt-domain' string='errs'>
       <info><![CDATA[In Xen this returns the mysterious 'oo_req', as an llong.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_BLOCK_STATS_FIELD_LENGTH' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_BLOCK_STATS_FIELD_LENGTH' file='libvirt-domain' raw='VIR_TYPED_PARAM_FIELD_LENGTH'>
       <info><![CDATA[Macro providing the field length of parameter names when using virDomainBlockStatsFlags().]]></info>
     </macro>
     <macro name='VIR_DOMAIN_BLOCK_STATS_FLUSH_REQ' file='libvirt-domain' string='flush_operations'>
@@ -2300,7 +2301,7 @@
     <macro name='VIR_DOMAIN_CPU_STATS_VCPUTIME' file='libvirt-domain' string='vcpu_time'>
       <info><![CDATA[vcpu usage in nanoseconds (cpu_time excluding hypervisor time), as a ullong]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_EVENT_CALLBACK' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_EVENT_CALLBACK' file='libvirt-domain' params='cb' raw=''>
       <info><![CDATA[Used to cast the event specific callback into the generic one for use for virConnectDomainEventRegisterAny()]]></info>
     </macro>
     <macro name='VIR_DOMAIN_IOTHREAD_POLL_GROW' file='libvirt-domain' string='poll_grow'>
@@ -2363,6 +2364,9 @@
     <macro name='VIR_DOMAIN_JOB_DOWNTIME_NET' file='libvirt-domain' string='downtime_net'>
       <info><![CDATA[virDomainGetJobStats field: real measured downtime (ms) NOT including the time required to transfer control flow from the source host to the destination host, as VIR_TYPED_PARAM_ULLONG.]]></info>
     </macro>
+    <macro name='VIR_DOMAIN_JOB_ERRMSG' file='libvirt-domain' string='errmsg'>
+      <info><![CDATA[virDomainGetJobStats field: Present only in statistics for a completed job. Optional error message for a failed job.]]></info>
+    </macro>
     <macro name='VIR_DOMAIN_JOB_MEMORY_BPS' file='libvirt-domain' string='memory_bps'>
       <info><![CDATA[virDomainGetJobStats field: network throughput used while migrating memory in Bytes per second, as VIR_TYPED_PARAM_ULLONG.]]></info>
     </macro>
@@ -2417,7 +2421,7 @@
     <macro name='VIR_DOMAIN_LAUNCH_SECURITY_SEV_MEASUREMENT' file='libvirt-domain' string='sev-measurement'>
       <info><![CDATA[Macro represents the launch measurement of the SEV guest, as VIR_TYPED_PARAM_STRING.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_MEMORY_FIELD_LENGTH' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_MEMORY_FIELD_LENGTH' file='libvirt-domain' raw='VIR_TYPED_PARAM_FIELD_LENGTH'>
       <info><![CDATA[Macro providing the field length of virMemoryParameter.  Provided for backwards compatibility; VIR_TYPED_PARAM_FIELD_LENGTH is the preferred value since 0.9.2.]]></info>
     </macro>
     <macro name='VIR_DOMAIN_MEMORY_HARD_LIMIT' file='libvirt-domain' string='hard_limit'>
@@ -2426,7 +2430,7 @@
     <macro name='VIR_DOMAIN_MEMORY_MIN_GUARANTEE' file='libvirt-domain' string='min_guarantee'>
       <info><![CDATA[Macro for the memory tunable min_guarantee: it represents the minimum memory guaranteed to be reserved for the guest, as a ullong.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_MEMORY_PARAM_UNLIMITED' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_MEMORY_PARAM_UNLIMITED' file='libvirt-domain' raw='9007199254740991LL /* = INT64_MAX &gt;&gt; 10 */'>
       <info><![CDATA[Macro providing the virMemoryParameter value that indicates "unlimited"]]></info>
     </macro>
     <macro name='VIR_DOMAIN_MEMORY_SOFT_LIMIT' file='libvirt-domain' string='soft_limit'>
@@ -2483,10 +2487,10 @@
     <macro name='VIR_DOMAIN_SCHEDULER_WEIGHT' file='libvirt-domain' string='weight'>
       <info><![CDATA[Macro represents the relative weight,  when using the credit scheduler, as a uint.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_SCHED_FIELD_LENGTH' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_SCHED_FIELD_LENGTH' file='libvirt-domain' raw='VIR_TYPED_PARAM_FIELD_LENGTH'>
       <info><![CDATA[Macro providing the field length of virSchedParameter.  Provided for backwards compatibility; VIR_TYPED_PARAM_FIELD_LENGTH is the preferred value since 0.9.2.]]></info>
     </macro>
-    <macro name='VIR_DOMAIN_SEND_KEY_MAX_KEYS' file='libvirt-domain'>
+    <macro name='VIR_DOMAIN_SEND_KEY_MAX_KEYS' file='libvirt-domain' raw='16'>
       <info><![CDATA[Maximum number of keycodes that can be sent in one virDomainSendKey() call.]]></info>
     </macro>
     <macro name='VIR_DOMAIN_TUNABLE_BLKDEV_DISK' file='libvirt-domain' string='blkdeviotune.disk'>
@@ -2588,13 +2592,13 @@
     <macro name='VIR_DOMAIN_TUNABLE_CPU_VCPU_QUOTA' file='libvirt-domain' string='cputune.vcpu_quota'>
       <info><![CDATA[Macro represents the maximum bandwidth to be used within a period for vcpus only, when using the posix scheduler, as VIR_TYPED_PARAM_LLONG.]]></info>
     </macro>
-    <macro name='VIR_GET_CPUMAP' file='libvirt-domain'>
+    <macro name='VIR_GET_CPUMAP' file='libvirt-domain' params='cpumaps,maplen,vcpu' raw='(&amp;((cpumaps)[(vcpu) * (maplen)]))'>
       <info><![CDATA[This macro is to be used in conjunction with virDomainGetVcpus() and virDomainPinVcpu() APIs. VIR_GET_CPUMAP macro returns a pointer to the cpumap of the specified vcpu from cpumaps array.]]></info>
       <arg name='cpumaps' info='pointer to an array of cpumap (in 8-bit bytes) (IN)'/>
       <arg name='maplen' info='the length (in bytes) of one cpumap'/>
       <arg name='vcpu' info='the virtual CPU number'/>
     </macro>
-    <macro name='VIR_KEYCODE_SET_RFB' file='libvirt-domain'>
+    <macro name='VIR_KEYCODE_SET_RFB' file='libvirt-domain' raw='VIR_KEYCODE_SET_QNUM'>
       <info><![CDATA[Compatibility alias for VIR_KEYCODE_SET_QNUM, which replaced it since 4.2.0.]]></info>
     </macro>
     <macro name='VIR_MIGRATE_PARAM_AUTO_CONVERGE_INCREMENT' file='libvirt-domain' string='auto_converge.increment'>
@@ -2654,7 +2658,7 @@
     <macro name='VIR_MIGRATE_PARAM_URI' file='libvirt-domain' string='migrate_uri'>
       <info><![CDATA[virDomainMigrate* params field: URI to use for initiating domain migration as VIR_TYPED_PARAM_STRING. It takes a hypervisor specific format. The uri_transports element of the hypervisor capabilities XML includes details of the supported URI schemes. When omitted libvirt will auto-generate suitable default URI. It is typically only necessary to specify this URI if the destination host has multiple interfaces and a specific interface is required to transmit migration data.  This field may not be used when VIR_MIGRATE_TUNNELLED flag is set.]]></info>
     </macro>
-    <macro name='VIR_NETWORK_EVENT_CALLBACK' file='libvirt-network'>
+    <macro name='VIR_NETWORK_EVENT_CALLBACK' file='libvirt-network' params='cb' raw=''>
       <info><![CDATA[Used to cast the event specific callback into the generic one for use for virConnectNetworkEventRegisterAny()]]></info>
     </macro>
     <macro name='VIR_NETWORK_PORT_BANDWIDTH_IN_AVERAGE' file='libvirt-network' string='inbound.average'>
@@ -2678,11 +2682,11 @@
     <macro name='VIR_NETWORK_PORT_BANDWIDTH_OUT_PEAK' file='libvirt-network' string='outbound.peak'>
       <info><![CDATA[Macro represents the outbound peak of NIC bandwidth, as a uint.]]></info>
     </macro>
-    <macro name='VIR_NODEINFO_MAXCPUS' file='libvirt-host'>
+    <macro name='VIR_NODEINFO_MAXCPUS' file='libvirt-host' params='nodeinfo' raw=''>
       <info><![CDATA[This macro is to calculate the total number of CPUs supported but not necessary active in the host.]]></info>
       <arg name='nodeinfo' info='virNodeInfo instance'/>
     </macro>
-    <macro name='VIR_NODE_CPU_STATS_FIELD_LENGTH' file='libvirt-host'>
+    <macro name='VIR_NODE_CPU_STATS_FIELD_LENGTH' file='libvirt-host' raw='80'>
       <info><![CDATA[Macro providing the field length of virNodeCPUStats]]></info>
     </macro>
     <macro name='VIR_NODE_CPU_STATS_IDLE' file='libvirt-host' string='idle'>
@@ -2703,7 +2707,7 @@
     <macro name='VIR_NODE_CPU_STATS_UTILIZATION' file='libvirt-host' string='utilization'>
       <info><![CDATA[The CPU utilization of a node. The usage value is in percent and 100% represents all CPUs of the node.]]></info>
     </macro>
-    <macro name='VIR_NODE_DEVICE_EVENT_CALLBACK' file='libvirt-nodedev'>
+    <macro name='VIR_NODE_DEVICE_EVENT_CALLBACK' file='libvirt-nodedev' params='cb' raw='((virConnectNodeDeviceEventGenericCallback)(cb))'>
       <info><![CDATA[Used to cast the event specific callback into the generic one for use for virConnectNodeDeviceEventRegisterAny()]]></info>
     </macro>
     <macro name='VIR_NODE_MEMORY_SHARED_FULL_SCANS' file='libvirt-host' string='shm_full_scans'>
@@ -2736,7 +2740,7 @@
     <macro name='VIR_NODE_MEMORY_STATS_CACHED' file='libvirt-host' string='cached'>
       <info><![CDATA[Macro for the cached memory: On Linux, it is only returned in case of VIR_NODE_MEMORY_STATS_ALL_CELLS.]]></info>
     </macro>
-    <macro name='VIR_NODE_MEMORY_STATS_FIELD_LENGTH' file='libvirt-host'>
+    <macro name='VIR_NODE_MEMORY_STATS_FIELD_LENGTH' file='libvirt-host' raw='80'>
       <info><![CDATA[Macro providing the field length of virNodeMemoryStats]]></info>
     </macro>
     <macro name='VIR_NODE_MEMORY_STATS_FREE' file='libvirt-host' string='free'>
@@ -2823,45 +2827,45 @@
     <macro name='VIR_PERF_PARAM_TASK_CLOCK' file='libvirt-domain' string='task_clock'>
       <info><![CDATA[Macro for typed parameter name that represents task_clock perf event which can be used to measure the count of task clock time by applications running on the platform. It corresponds to the "perf.task_clock" field in the *Stats APIs.]]></info>
     </macro>
-    <macro name='VIR_SECRET_EVENT_CALLBACK' file='libvirt-secret'>
+    <macro name='VIR_SECRET_EVENT_CALLBACK' file='libvirt-secret' params='cb' raw='((virConnectSecretEventGenericCallback)(cb))'>
       <info><![CDATA[Used to cast the event specific callback into the generic one for use for virConnectSecretEventRegisterAny()]]></info>
     </macro>
-    <macro name='VIR_SECURITY_DOI_BUFLEN' file='libvirt-host'>
+    <macro name='VIR_SECURITY_DOI_BUFLEN' file='libvirt-host' raw='(256 + 1)'>
       <info><![CDATA[Macro providing the maximum length of the virSecurityModel doi string.]]></info>
     </macro>
-    <macro name='VIR_SECURITY_LABEL_BUFLEN' file='libvirt-host'>
+    <macro name='VIR_SECURITY_LABEL_BUFLEN' file='libvirt-host' raw='(4096 + 1)'>
       <info><![CDATA[Macro providing the maximum length of the virSecurityLabel label string. Note that this value is based on that used by Labeled NFS.]]></info>
     </macro>
-    <macro name='VIR_SECURITY_MODEL_BUFLEN' file='libvirt-host'>
+    <macro name='VIR_SECURITY_MODEL_BUFLEN' file='libvirt-host' raw='(256 + 1)'>
       <info><![CDATA[Macro providing the maximum length of the virSecurityModel model string.]]></info>
     </macro>
-    <macro name='VIR_STORAGE_POOL_EVENT_CALLBACK' file='libvirt-storage'>
+    <macro name='VIR_STORAGE_POOL_EVENT_CALLBACK' file='libvirt-storage' params='cb' raw='((virConnectStoragePoolEventGenericCallback)(cb))'>
       <info><![CDATA[Used to cast the event specific callback into the generic one for use for virConnectStoragePoolEventRegisterAny()]]></info>
     </macro>
-    <macro name='VIR_TYPED_PARAM_FIELD_LENGTH' file='libvirt-common'>
+    <macro name='VIR_TYPED_PARAM_FIELD_LENGTH' file='libvirt-common' raw='80'>
       <info><![CDATA[Macro providing the field length of virTypedParameter name]]></info>
     </macro>
-    <macro name='VIR_UNUSE_CPU' file='libvirt-domain'>
+    <macro name='VIR_UNUSE_CPU' file='libvirt-domain' params='cpumap,cpu' raw='((cpumap)[(cpu) / 8] &amp;= ~(1 &lt;&lt; ((cpu) % 8)))'>
       <info><![CDATA[This macro is to be used in conjunction with virDomainPinVcpu() API. It resets the bit (CPU not usable) of the related cpu in cpumap.]]></info>
       <arg name='cpumap' info='pointer to a bit map of real CPUs (in 8-bit bytes) (IN/OUT)'/>
       <arg name='cpu' info='the physical CPU number'/>
     </macro>
-    <macro name='VIR_USE_CPU' file='libvirt-domain'>
+    <macro name='VIR_USE_CPU' file='libvirt-domain' params='cpumap,cpu' raw='((cpumap)[(cpu) / 8] |= (1 &lt;&lt; ((cpu) % 8)))'>
       <info><![CDATA[This macro is to be used in conjunction with virDomainPinVcpu() API. It sets the bit (CPU usable) of the related cpu in cpumap.]]></info>
       <arg name='cpumap' info='pointer to a bit map of real CPUs (in 8-bit bytes) (IN/OUT)'/>
       <arg name='cpu' info='the physical CPU number'/>
     </macro>
-    <macro name='VIR_UUID_BUFLEN' file='libvirt-host'>
+    <macro name='VIR_UUID_BUFLEN' file='libvirt-host' raw='(16)'>
       <info><![CDATA[This macro provides the length of the buffer required for virDomainGetUUID()]]></info>
     </macro>
-    <macro name='VIR_UUID_STRING_BUFLEN' file='libvirt-host'>
+    <macro name='VIR_UUID_STRING_BUFLEN' file='libvirt-host' raw='(36+1)'>
       <info><![CDATA[This macro provides the length of the buffer required for virDomainGetUUIDString()]]></info>
     </macro>
-    <macro name='_virBlkioParameter' file='libvirt-domain'>
+    <macro name='_virBlkioParameter' file='libvirt-domain' raw='_virTypedParameter'>
     </macro>
-    <macro name='_virMemoryParameter' file='libvirt-domain'>
+    <macro name='_virMemoryParameter' file='libvirt-domain' raw='_virTypedParameter'>
     </macro>
-    <macro name='_virSchedParameter' file='libvirt-domain'>
+    <macro name='_virSchedParameter' file='libvirt-domain' raw='_virTypedParameter'>
     </macro>
     <enum name='VIR_CONNECT_BASELINE_CPU_EXPAND_FEATURES' file='libvirt-host' value='1' value_hex='0x1' value_bitshift='0' type='virConnectBaselineCPUFlags' info='show all features'/>
     <enum name='VIR_CONNECT_BASELINE_CPU_MIGRATABLE' file='libvirt-host' value='2' value_hex='0x2' value_bitshift='1' type='virConnectBaselineCPUFlags' info='filter out non-migratable features'/>
@@ -3304,9 +3308,9 @@ stats when reading them'/>
     <enum name='VIR_DOMAIN_MEMORY_STAT_DISK_CACHES' file='libvirt-domain' value='10' value_hex='0xa' type='virDomainMemoryStatTags' info='The amount of memory, that can be quickly reclaimed without
  additional I/O (in kB). Typically these pages are used for caching files
  from disk.'/>
-    <enum name='VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGALLOC' file='libvirt-domain' value='11' value_hex='0xb' type='virDomainMemoryStatTags' info='The amount of successful huge page allocations from inside the domain via
+    <enum name='VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGALLOC' file='libvirt-domain' value='11' value_hex='0xb' type='virDomainMemoryStatTags' info='The number of successful huge page allocations from inside the domain via
  virtio balloon.'/>
-    <enum name='VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGFAIL' file='libvirt-domain' value='12' value_hex='0xc' type='virDomainMemoryStatTags' info='The amount of failed huge page allocations from inside the domain via
+    <enum name='VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGFAIL' file='libvirt-domain' value='12' value_hex='0xc' type='virDomainMemoryStatTags' info='The number of failed huge page allocations from inside the domain via
  virtio balloon.'/>
     <enum name='VIR_DOMAIN_MEMORY_STAT_LAST' file='libvirt-domain' value='VIR_DOMAIN_MEMORY_STAT_NR' type='virDomainMemoryStatTags'/>
     <enum name='VIR_DOMAIN_MEMORY_STAT_LAST_UPDATE' file='libvirt-domain' value='9' value_hex='0x9' type='virDomainMemoryStatTags' info='Timestamp of the last update of statistics, in seconds.'/>
@@ -5255,6 +5259,34 @@ VIR_DOMAIN_STATS_BALLOON:
                         as unsigned long long.
     "balloon.maximum" - the maximum memory in kiB allowed
                         as unsigned long long.
+    "balloon.swap_in" - the amount of data read from swap space (in KiB)
+                        as unsigned long long
+    "balloon.swap_out" - the amount of memory written out to swap space
+                         (in KiB) as unsigned long long
+    "balloon.major_fault" - the number of page faults when disk IO was
+                            required as unsigned long long
+    "balloon.minor_fault" - the number of other page faults
+                            as unsigned long long
+    "balloon.unused" - the amount of memory left unused by the system
+                       (in KiB) as unsigned long long
+    "balloon.available" - the amount of usable memory as seen by the domain
+                          (in KiB) as unsigned long long
+    "balloon.rss" - Resident Set Size of running domain's process
+                    (in KiB) as unsigned long long
+    "balloon.usable" - the amount of memory which can be reclaimed by balloon
+                       without causing host swapping (in KiB)
+                       as unsigned long long
+    "balloon.last-update" - timestamp of the last update of statistics
+                            (in seconds) as unsigned long long
+    "balloon.disk_caches" - the amount of memory that can be reclaimed
+                            without additional I/O, typically disk (in KiB)
+                            as unsigned long long
+    "balloon.hugetlb_pgalloc" - the number of successful huge page allocations
+                                from inside the domain via virtio balloon
+                                as unsigned long long
+    "balloon.hugetlb_pgfail" - the number of failed huge page allocations
+                               from inside the domain via virtio balloon
+                               as unsigned long long
 
 VIR_DOMAIN_STATS_VCPU:
     Return virtual CPU statistics.
@@ -5269,6 +5301,11 @@ VIR_DOMAIN_STATS_VCPU:
                          from virVcpuState enum.
     "vcpu.<num>.time" - virtual cpu time spent by virtual CPU <num>
                         as unsigned long long.
+    "vcpu.<num>.wait" - time the vCPU <num> wants to run, but the host
+                        scheduler has something else running ahead of it.
+    "vcpu.<num>.halted" - virtual CPU <num> is halted, may indicate the
+                          processor is idle or even disabled, depending
+                          on the architecture)
 
 VIR_DOMAIN_STATS_INTERFACE:
     Return network interface statistics (from domain point of view).
@@ -6438,13 +6475,13 @@ just live or both live and persistent state is changed.]]></info>
       <info><![CDATA[Set how long to wait for a response from guest agent commands. By default,
 agent commands block forever waiting for a response.
 
-@timeout must be a value from virDomainAgentCommandTimeoutValues or
+@timeout must be a value from virDomainAgentResponseTimeoutValues or
 positive:
 
-  VIR_DOMAIN_AGENT_COMMAND_TIMEOUT_BLOCK(-2): meaning to block forever
+  VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_BLOCK(-2): meaning to block forever
      waiting for a result.
-  VIR_DOMAIN_AGENT_COMMAND_TIMEOUT_DEFAULT(-1): use default timeout value.
-  VIR_DOMAIN_AGENT_COMMAND_TIMEOUT_NOWAIT(0): does not wait.
+  VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_DEFAULT(-1): use default timeout value.
+  VIR_DOMAIN_AGENT_RESPONSE_TIMEOUT_NOWAIT(0): does not wait.
   positive value: wait for @timeout seconds]]></info>
       <return type='int' info='0 on success, -1 on failure'/>
       <arg name='domain' type='virDomainPtr' info='a domain object'/>
@@ -6777,7 +6814,7 @@ beginning of the first phase.]]></info>
       <arg name='flags' type='unsigned int' info='bitwise-OR of virDomainBlockJobAbortFlags'/>
     </function>
     <function name='virDomainBlockJobSetSpeed' file='libvirt-domain' module='libvirt-domain'>
-      <info><![CDATA[Set the maximimum allowable bandwidth that a block job may consume.  If
+      <info><![CDATA[Set the maximum allowable bandwidth that a block job may consume.  If
 bandwidth is 0, the limit will revert to the hypervisor default of
 unlimited.
 
@@ -7179,7 +7216,8 @@ does not change over time. However, when @flags contains
 VIR_DOMAIN_CHECKPOINT_XML_SIZE, each <disk> listing adds an additional
 attribute that shows an estimate of the current size in bytes that
 have been dirtied between the time the checkpoint was created and the
-current point in time.]]></info>
+current point in time. Note that updating the size may be expensive and
+data will be inaccurate once guest OS writes to the disk.]]></info>
       <return type='char *' info='a 0 terminated UTF-8 encoded XML instance or NULL in case of error. The caller must free() the returned value.'/>
       <arg name='checkpoint' type='virDomainCheckpointPtr' info='a domain checkpoint object'/>
       <arg name='flags' type='unsigned int' info='bitwise-OR of supported virDomainCheckpointXMLFlags'/>
@@ -8837,9 +8875,9 @@ VIR_DOMAIN_MEMORY_STAT_DISK_CACHES
     Memory that can be reclaimed without additional I/O, typically disk
     caches (in kb).
 VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGALLOC
-    The amount of successful huge page allocations from inside the domain
+    The number of successful huge page allocations from inside the domain
 VIR_DOMAIN_MEMORY_STAT_HUGETLB_PGFAIL
-    The amount of failed huge page allocations from inside the domain]]></info>
+    The number of failed huge page allocations from inside the domain]]></info>
       <return type='int' info='The number of stats provided or -1 in case of failure.'/>
       <arg name='dom' type='virDomainPtr' info='pointer to the domain object'/>
       <arg name='stats' type='virDomainMemoryStatPtr' info='nr_stats-sized array of stat structures (returned)'/>
@@ -9638,6 +9676,19 @@ VIR_DOMAIN_EVENT_ID_BLOCK_THRESHOLD if the device or backing chain element
 described by @dev is written beyond the set threshold level. The threshold
 level is unset once the event fires. The event might not be delivered at all
 if libvirtd was not running at the moment when the threshold was reached.
+Note that if the threshold level is reached for a top level image, the event
+is emitted for @dev corresponding to the disk target, and may also be reported
+with @dev corresponding to the disk target with an index corresponding to the
+'index' attribute of 'source' in the live VM XML if the attribute is present.
+
+@dev can either be a disk target name (vda, sda) or disk target with index (
+vda[4]). Without the index the top image in the backing chain will have the
+threshold set. The index corresponds to the 'index' attribute reported in the
+live VM XML for 'backingStore' or 'source' elements of a disk. If index is
+given the threshold is set for the corresponding image.
+
+Note that the threshold event can be registered also for destinations of a
+'virDomainBlockCopy' destination by using the 'index' of the 'mirror' source.
 
 Hypervisors report the last written sector of an image in the bulk stats API
 (virConnectGetAllDomainStats/virDomainListGetStats) as
@@ -11511,7 +11562,7 @@ to the node using the virNodeDeviceReAttach() method.]]></info>
       <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
     </function>
     <function name='virNodeDeviceDettach' file='libvirt-nodedev' module='libvirt-nodedev'>
-      <info><![CDATA[Dettach the node device from the node itself so that it may be
+      <info><![CDATA[Detach the node device from the node itself so that it may be
 assigned to a guest domain.
 
 Depending on the hypervisor, this may involve operations such

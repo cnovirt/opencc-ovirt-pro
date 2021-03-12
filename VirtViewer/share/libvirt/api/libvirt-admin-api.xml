@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api name='libvirt-admin'>
+  <files>
+    <file name='libvirt-admin'>
+     <summary>Interfaces for handling server-related tasks</summary>
+     <description>Provides the interfaces of the libvirt library to operate with the server itself, not any hypervisors.  Copyright (C) 2014-2015 Red Hat, Inc.  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.  You should have received a copy of the GNU Lesser General Public License along with this library.  If not, see &lt;http://www.gnu.org/licenses/&gt;. </description>
+     <exports symbol='VIR_CLIENT_INFO_READONLY' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_SASL_USER_NAME' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_SELINUX_CONTEXT' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_SOCKET_ADDR' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_UNIX_GROUP_ID' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_UNIX_GROUP_NAME' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_UNIX_PROCESS_ID' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_UNIX_USER_ID' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_UNIX_USER_NAME' type='macro'/>
+     <exports symbol='VIR_CLIENT_INFO_X509_DISTINGUISHED_NAME' type='macro'/>
+     <exports symbol='VIR_SERVER_CLIENTS_CURRENT' type='macro'/>
+     <exports symbol='VIR_SERVER_CLIENTS_MAX' type='macro'/>
+     <exports symbol='VIR_SERVER_CLIENTS_UNAUTH_CURRENT' type='macro'/>
+     <exports symbol='VIR_SERVER_CLIENTS_UNAUTH_MAX' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_JOB_QUEUE_DEPTH' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_WORKERS_CURRENT' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_WORKERS_FREE' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_WORKERS_MAX' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_WORKERS_MIN' type='macro'/>
+     <exports symbol='VIR_THREADPOOL_WORKERS_PRIORITY' type='macro'/>
+     <exports symbol='VIR_CLIENT_TRANS_LAST' type='enum'/>
+     <exports symbol='VIR_CLIENT_TRANS_TCP' type='enum'/>
+     <exports symbol='VIR_CLIENT_TRANS_TLS' type='enum'/>
+     <exports symbol='VIR_CLIENT_TRANS_UNIX' type='enum'/>
+     <exports symbol='virAdmClient' type='typedef'/>
+     <exports symbol='virAdmClientPtr' type='typedef'/>
+     <exports symbol='virAdmConnect' type='typedef'/>
+     <exports symbol='virAdmConnectPtr' type='typedef'/>
+     <exports symbol='virAdmServer' type='typedef'/>
+     <exports symbol='virAdmServerPtr' type='typedef'/>
+     <exports symbol='virClientTransport' type='typedef'/>
+     <exports symbol='virAdmClientClose' type='function'/>
+     <exports symbol='virAdmClientFree' type='function'/>
+     <exports symbol='virAdmClientGetID' type='function'/>
+     <exports symbol='virAdmClientGetInfo' type='function'/>
+     <exports symbol='virAdmClientGetTimestamp' type='function'/>
+     <exports symbol='virAdmClientGetTransport' type='function'/>
+     <exports symbol='virAdmConnectClose' type='function'/>
+     <exports symbol='virAdmConnectCloseFunc' type='function'/>
+     <exports symbol='virAdmConnectGetLibVersion' type='function'/>
+     <exports symbol='virAdmConnectGetLoggingFilters' type='function'/>
+     <exports symbol='virAdmConnectGetLoggingOutputs' type='function'/>
+     <exports symbol='virAdmConnectGetURI' type='function'/>
+     <exports symbol='virAdmConnectIsAlive' type='function'/>
+     <exports symbol='virAdmConnectListServers' type='function'/>
+     <exports symbol='virAdmConnectLookupServer' type='function'/>
+     <exports symbol='virAdmConnectOpen' type='function'/>
+     <exports symbol='virAdmConnectRef' type='function'/>
+     <exports symbol='virAdmConnectRegisterCloseCallback' type='function'/>
+     <exports symbol='virAdmConnectSetLoggingFilters' type='function'/>
+     <exports symbol='virAdmConnectSetLoggingOutputs' type='function'/>
+     <exports symbol='virAdmConnectUnregisterCloseCallback' type='function'/>
+     <exports symbol='virAdmGetVersion' type='function'/>
+     <exports symbol='virAdmInitialize' type='function'/>
+     <exports symbol='virAdmServerFree' type='function'/>
+     <exports symbol='virAdmServerGetClientLimits' type='function'/>
+     <exports symbol='virAdmServerGetName' type='function'/>
+     <exports symbol='virAdmServerGetThreadPoolParameters' type='function'/>
+     <exports symbol='virAdmServerListClients' type='function'/>
+     <exports symbol='virAdmServerLookupClient' type='function'/>
+     <exports symbol='virAdmServerSetClientLimits' type='function'/>
+     <exports symbol='virAdmServerSetThreadPoolParameters' type='function'/>
+     <exports symbol='virAdmServerUpdateTlsFiles' type='function'/>
+    </file>
+  </files>
+  <symbols>
+    <macro name='VIR_CLIENT_INFO_READONLY' file='libvirt-admin' string='readonly'>
+      <info><![CDATA[Macro represents client's connection permission, whether the client is connected in read-only mode or just the opposite - read-write, as VIR_TYPED_PARAM_BOOLEAN.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_SASL_USER_NAME' file='libvirt-admin' string='sasl_user_name'>
+      <info><![CDATA[Macro represents client's SASL user name, if SASL authentication is enabled on the remote host, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_SELINUX_CONTEXT' file='libvirt-admin' string='selinux_context'>
+      <info><![CDATA[Macro represents the client's (peer's) SELinux context and this can either be at socket layer or at transport layer, depending on the connection type, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_SOCKET_ADDR' file='libvirt-admin' string='sock_addr'>
+      <info><![CDATA[Macro represents clients network socket address in a standard URI format: (IPv4|[IPv6]):port, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_UNIX_GROUP_ID' file='libvirt-admin' string='unix_group_id'>
+      <info><![CDATA[Macro represents UNIX GID the client process is running with. Only relevant for clients connected locally, i.e. via a UNIX socket, as VIR_TYPED_PARAM_INT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_UNIX_GROUP_NAME' file='libvirt-admin' string='unix_group_name'>
+      <info><![CDATA[Macro represents the group name that is bound to the client process's GID it is running with. Only relevant for clients connected locally, i.e. via a UNIX socket, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_UNIX_PROCESS_ID' file='libvirt-admin' string='unix_process_id'>
+      <info><![CDATA[Macro represents the client process's pid it is running with. Only relevant for clients connected locally, i.e. via a UNIX socket, as VIR_TYPED_PARAM_INT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_UNIX_USER_ID' file='libvirt-admin' string='unix_user_id'>
+      <info><![CDATA[Macro represents UNIX UID the client process is running with. Only relevant for clients connected locally, i.e. via a UNIX socket, as VIR_TYPED_PARAM_INT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_UNIX_USER_NAME' file='libvirt-admin' string='unix_user_name'>
+      <info><![CDATA[Macro represents the user name that is bound to the client process's UID it is running with. Only relevant for clients connected locally, i.e. via a UNIX socket, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_CLIENT_INFO_X509_DISTINGUISHED_NAME' file='libvirt-admin' string='tls_x509_dname'>
+      <info><![CDATA[Macro represents the 'distinguished name' field in X509 certificate the client used to establish a TLS session with remote host, as VIR_TYPED_PARAM_STRING.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_SERVER_CLIENTS_CURRENT' file='libvirt-admin' string='nclients'>
+      <info><![CDATA[Macro for per-server nclients attribute: represents the current number of clients connected to the server, as VIR_TYPED_PARAM_UINT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_SERVER_CLIENTS_MAX' file='libvirt-admin' string='nclients_max'>
+      <info><![CDATA[Macro for per-server nclients_max limit: represents the upper limit to number of clients connected to the server, as uint.]]></info>
+    </macro>
+    <macro name='VIR_SERVER_CLIENTS_UNAUTH_CURRENT' file='libvirt-admin' string='nclients_unauth'>
+      <info><![CDATA[Macro for per-server nclients_unauth attribute: represents the current number of clients connected to the server, but not authenticated yet, as VIR_TYPED_PARAM_UINT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_SERVER_CLIENTS_UNAUTH_MAX' file='libvirt-admin' string='nclients_unauth_max'>
+      <info><![CDATA[Macro for per-server nclients_unauth_max limit: represents the upper limit to number of clients connected to the server, but not authenticated yet, as VIR_TYPED_PARAM_UINT.]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_JOB_QUEUE_DEPTH' file='libvirt-admin' string='jobQueueDepth'>
+      <info><![CDATA[Macro for the threadpool jobQueueDepth attribute: represents the current number of jobs waiting in a queue to be processed, as VIR_TYPED_PARAM_UINT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_WORKERS_CURRENT' file='libvirt-admin' string='nWorkers'>
+      <info><![CDATA[Macro for the threadpool nWorkers attribute: represents the current number of active ordinary workers in threadpool, as VIR_TYPED_PARAM_UINT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_WORKERS_FREE' file='libvirt-admin' string='freeWorkers'>
+      <info><![CDATA[Macro for the threadpool freeWorkers attribute: represents the current number of free workers available to accomplish a job, as VIR_TYPED_PARAM_UINT.  NOTE: This attribute is read-only and any attempt to set it will be denied by daemon]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_WORKERS_MAX' file='libvirt-admin' string='maxWorkers'>
+      <info><![CDATA[Macro for the threadpool maxWorkers limit: represents the upper limit to number of active workers in threadpool, as VIR_TYPED_PARAM_UINT. The value of this limit has to be greater than VIR_THREADPOOL_WORKERS_MIN at all times.]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_WORKERS_MIN' file='libvirt-admin' string='minWorkers'>
+      <info><![CDATA[Macro for the threadpool minWorkers limit: represents the bottom limit to number of active workers in threadpool, as VIR_TYPED_PARAM_UINT.]]></info>
+    </macro>
+    <macro name='VIR_THREADPOOL_WORKERS_PRIORITY' file='libvirt-admin' string='prioWorkers'>
+      <info><![CDATA[Macro for the threadpool nPrioWorkers attribute: represents the current number of active priority workers in threadpool, as VIR_TYPED_PARAM_UINT.]]></info>
+    </macro>
+    <enum name='VIR_CLIENT_TRANS_LAST' file='libvirt-admin' value='3' value_hex='0x3' type='virClientTransport'/>
+    <enum name='VIR_CLIENT_TRANS_TCP' file='libvirt-admin' value='1' value_hex='0x1' type='virClientTransport' info='connection via unencrypted TCP socket'/>
+    <enum name='VIR_CLIENT_TRANS_TLS' file='libvirt-admin' value='2' value_hex='0x2' type='virClientTransport' info='connection via encrypted TCP socket'/>
+    <enum name='VIR_CLIENT_TRANS_UNIX' file='libvirt-admin' value='0' value_hex='0x0' type='virClientTransport' info='connection via UNIX socket'/>
+    <struct name='virAdmClient' file='libvirt-admin' type='struct _virAdmClient'/>
+    <typedef name='virAdmClientPtr' file='libvirt-admin' type='virAdmClient *'>
+      <info><![CDATA[a virAdmClientPtr is a pointer to a virAdmClient structure, this is the type used to reference client-side representation of a client object throughout all the APIs.]]></info>
+    </typedef>
+    <struct name='virAdmConnect' file='libvirt-admin' type='struct _virAdmConnect'/>
+    <typedef name='virAdmConnectPtr' file='libvirt-admin' type='virAdmConnect *'>
+      <info><![CDATA[a virAdmConnectPtr is pointer to a virAdmConnect private structure, this is the type used to reference a connection to the daemon in the API.]]></info>
+    </typedef>
+    <struct name='virAdmServer' file='libvirt-admin' type='struct _virAdmServer'/>
+    <typedef name='virAdmServerPtr' file='libvirt-admin' type='virAdmServer *'>
+      <info><![CDATA[a virAdmServerPtr is a pointer to a virAdmServer structure, this is the type used to reference client-side representation of a remote server object throughout all the APIs.]]></info>
+    </typedef>
+    <typedef name='virClientTransport' file='libvirt-admin' type='enum'/>
+    <function name='virAdmClientClose' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Close @client's connection to daemon forcefully.]]></info>
+      <return type='int' info='0 if the daemon&apos;s connection with @client was closed successfully or -1 in case of an error.'/>
+      <arg name='client' type='virAdmClientPtr' info='a valid client object reference'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmClientFree' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Release the client object. The running instance is kept alive. The data
+structure is freed and should not be used thereafter.]]></info>
+      <return type='int' info='0 in success, -1 on failure.'/>
+      <arg name='client' type='virAdmClientPtr' info='a client object'/>
+    </function>
+    <function name='virAdmClientGetID' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Get client's unique numeric ID.]]></info>
+      <return type='unsigned long long' info='numeric value used for client&apos;s ID or -1 in case of an error.'/>
+      <arg name='client' type='virAdmClientPtr' info='a client object'/>
+    </function>
+    <function name='virAdmClientGetInfo' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Extract identity information about a client. Attributes returned in @params
+are mostly transport-dependent, i.e. some attributes including client
+process's pid, gid, uid, or remote side's socket address are only available
+for a specific connection type - local vs remote.
+Other identity attributes like authentication method used
+(if authentication is enabled on the remote host), SELinux context, or
+an indicator whether client is connected via a read-only connection are
+independent of the connection transport.
+
+Note that the read-only connection indicator returns false for TCP/TLS
+clients because libvirt treats such connections as read-write by default,
+even though a TCP client is able to restrict access to certain APIs for
+itself.]]></info>
+      <return type='int' info='0 if the information has been successfully retrieved or -1 in case of an error.'/>
+      <arg name='client' type='virAdmClientPtr' info='a client object reference'/>
+      <arg name='params' type='virTypedParameterPtr *' info='pointer to a list of typed parameters which will be allocated to store all returned parameters'/>
+      <arg name='nparams' type='int *' info='pointer which will hold the number of params returned in @params'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmClientGetTimestamp' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Get client's connection time.
+A situation may happen, that some clients had connected prior to the update
+to admin API, thus, libvirt assigns these clients epoch time to express that
+it doesn't know when the client connected.]]></info>
+      <return type='long long' info='client&apos;s connection timestamp (seconds from epoch in UTC) or 0 (epoch time) if libvirt doesn&apos;t have any information about client&apos;s connection time, or -1 in case of an error.'/>
+      <arg name='client' type='virAdmClientPtr' info='a client object'/>
+    </function>
+    <function name='virAdmClientGetTransport' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Get client's connection transport type. This information can be helpful to
+differentiate between clients connected locally or remotely. An exception to
+this would be SSH which is one of libvirt's supported transports.
+Although SSH creates a channel between two (preferably) remote endpoints,
+the client process libvirt spawns automatically on the remote side will
+still connect to a UNIX socket, thus becoming indistinguishable from any
+other locally connected clients.]]></info>
+      <return type='int' info='integer representation of the connection transport used by @client (this will be one of virClientTransport) or -1 in case of an error.'/>
+      <arg name='client' type='virAdmClientPtr' info='a client object'/>
+    </function>
+    <function name='virAdmConnectClose' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[This function closes the admin connection to the Hypervisor. This should not
+be called if further interaction with the Hypervisor are needed especially if
+there is running domain which need further monitoring by the application.
+
+Connections are reference counted; the count is explicitly increased by the
+initial virAdmConnectOpen, as well as virAdmConnectRef; it is also temporarily
+increased by other API that depend on the connection remaining alive.  The
+open and every virAdmConnectRef call should have a matching
+virAdmConnectClose, and all other references will be released after the
+corresponding operation completes.]]></info>
+      <return type='int' info='a positive number if at least 1 reference remains on success. The returned value should not be assumed to be the total reference count. A return of 0 implies no references remain and the connection is closed and memory has been freed. A return of -1 implies a failure.  It is possible for the last virAdmConnectClose to return a positive value if some other object still has a temporary reference to the connection, but the application should not try to further use a connection after the virAdmConnectClose that matches the initial open.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to admin connection to close'/>
+    </function>
+    <functype name='virAdmConnectCloseFunc' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[A callback to be registered, in case a connection was closed.]]></info>
+      <return type='void'/>
+      <arg name='conn' type='virAdmConnectPtr' info='virAdmConnect connection'/>
+      <arg name='reason' type='int' info='reason why the connection was closed (see virConnectCloseReason)'/>
+      <arg name='opaque' type='void *' info='opaque client data'/>
+    </functype>
+    <function name='virAdmConnectGetLibVersion' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Retrieves the remote side libvirt version used by the daemon. Format
+returned in @libVer is of a following pattern:
+major * 1,000,000 + minor * 1,000 + release.]]></info>
+      <return type='int' info='0 on success, -1 on failure and @libVer follows this format:'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an active admin connection'/>
+      <arg name='libVer' type='unsigned long long *' info='stores the current remote libvirt version number'/>
+    </function>
+    <function name='virAdmConnectGetLoggingFilters' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Retrieves a list of currently installed logging filters. Filters returned
+are contained within an automatically allocated string and delimited by
+spaces. The format of each filter conforms to the format described in
+daemon's configuration file (e.g. libvirtd.conf).
+
+To retrieve individual filters, additional parsing needs to be done by the
+caller. Caller is also responsible for freeing @filters correctly.]]></info>
+      <return type='int' info='the number of filters returned in @filters, or -1 in case of an error.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an active admin connection'/>
+      <arg name='filters' type='char **' info='pointer to a variable to store a string containing all currently defined logging filters on daemon (allocated automatically) or NULL if just the number of defined outputs is required'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectGetLoggingOutputs' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Retrieves a list of currently installed logging outputs. Outputs returned
+are contained within an automatically allocated string and delimited by
+spaces. The format of each output conforms to the format described in
+daemon's configuration file (e.g. libvirtd.conf).
+
+To retrieve individual outputs, additional parsing needs to be done by the
+caller. Caller is also responsible for freeing @outputs correctly.]]></info>
+      <return type='int' info='the count of outputs in @outputs, or -1 in case of an error.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an active admin connection'/>
+      <arg name='outputs' type='char **' info='pointer to a variable to store a string containing all currently defined logging outputs on daemon (allocated automatically) or NULL if just the number of defined outputs is required'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectGetURI' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[String returned by this method is normally the same as the string passed
+to the virAdmConnectOpen. Even if NULL was passed to virAdmConnectOpen,
+this method returns a non-null URI string.]]></info>
+      <return type='char *' info='an URI string related to the connection or NULL in case of an error. Caller is responsible for freeing the string.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an admin connection'/>
+    </function>
+    <function name='virAdmConnectIsAlive' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Decide whether the connection to the admin server is alive or not.
+Connection is considered alive if the channel it is running over is not
+closed.]]></info>
+      <return type='int' info='1, if the connection is alive, 0 if there isn&apos;t an existing connection at all or the channel has already been closed, or -1 on error.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='connection to admin server'/>
+    </function>
+    <function name='virAdmConnectListServers' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Collect list of all servers provided by daemon the client is connected to.]]></info>
+      <return type='int' info='the number of servers available on daemon side or -1 in case of a failure, setting @servers to NULL. There is a guaranteed extra element set to NULL in the @servers list returned to make the iteration easier, excluding this extra element from the final count. Caller is responsible to call virAdmServerFree() on each list element, followed by freeing @servers.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='daemon connection reference'/>
+      <arg name='servers' type='virAdmServerPtr **' info='Pointer to a list to store an array containing objects or NULL if the list is not required (number of servers only)'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectLookupServer' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Try to lookup a server on the given daemon based on @name.
+
+virAdmServerFree() should be used to free the resources after the
+server object is no longer needed.]]></info>
+      <return type='virAdmServerPtr' info='the requested server or NULL in case of failure.  If the server cannot be found, then VIR_ERR_NO_SERVER error is raised.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='daemon connection reference'/>
+      <arg name='name' type='const char *' info='name of the server too lookup'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectOpen' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Opens connection to admin interface of the daemon.]]></info>
+      <return type='virAdmConnectPtr' info='@virAdmConnectPtr object or NULL on error'/>
+      <arg name='name' type='const char *' info='uri of the daemon to connect to, NULL for default'/>
+      <arg name='flags' type='unsigned int' info='bitwise-OR of virConnectFlags; so far the only supported flag is VIR_CONNECT_NO_ALIASES'/>
+    </function>
+    <function name='virAdmConnectRef' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Increment the reference count on the connection. For each additional call to
+this method, there shall be a corresponding call to virAdmConnectClose to
+release the reference count, once the caller no longer needs the reference to
+this object.
+
+This method is typically useful for applications where multiple threads are
+using a connection, and it is required that the connection remain open until
+all threads have finished using it. I.e., each new thread using a connection
+would increment the reference count.]]></info>
+      <return type='int' info='0 in case of success, -1 in case of failure'/>
+      <arg name='conn' type='virAdmConnectPtr' info='the connection to hold a reference on'/>
+    </function>
+    <function name='virAdmConnectRegisterCloseCallback' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Registers a callback to be invoked when the connection
+is closed. This callback is invoked when there is any
+condition that causes the socket connection to the
+hypervisor to be closed.
+
+The @freecb must not invoke any other libvirt public
+APIs, since it is not called from a re-entrant safe
+context.]]></info>
+      <return type='int' info='0 on success, -1 on error'/>
+      <arg name='conn' type='virAdmConnectPtr' info='connection to admin server'/>
+      <arg name='cb' type='virAdmConnectCloseFunc' info='callback to be invoked upon connection close'/>
+      <arg name='opaque' type='void *' info='user data to pass to @cb'/>
+      <arg name='freecb' type='virFreeCallback' info='callback to free @opaque'/>
+    </function>
+    <function name='virAdmConnectSetLoggingFilters' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Redefine the existing (set of) filter(s) with a new one specified in
+@filters. If multiple filters are specified, they need to be delimited by
+spaces. The format of each filter must conform to the format described in
+daemon's configuration file (e.g. libvirtd.conf).
+
+To clear the currently defined (set of) filter(s), pass either an empty
+string ("") or NULL in @filters.]]></info>
+      <return type='int' info='0 if the new filter or the set of filters has been defined successfully, or -1 in case of an error.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an active admin connection'/>
+      <arg name='filters' type='const char *' info='pointer to a string containing a list of filters to be defined'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectSetLoggingOutputs' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Redefine the existing (set of) outputs(s) with a new one specified in
+@outputs. If multiple outputs are specified, they need to be delimited by
+spaces. The format of each output must conform to the format described in
+daemon's configuration file (e.g. libvirtd.conf).
+
+To reset the existing (set of) output(s) to libvirt's defaults, an empty
+string ("") or NULL should be passed in @outputs.]]></info>
+      <return type='int' info='0 if the new output or the set of outputs has been defined successfully, or -1 in case of an error.'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to an active admin connection'/>
+      <arg name='outputs' type='const char *' info='pointer to a string containing a list of outputs to be defined'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmConnectUnregisterCloseCallback' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Unregisters the callback previously set with the
+virAdmConnectRegisterCloseCallback method. The callback
+will no longer receive notifications when the connection
+closes. If a virFreeCallback was provided at time of
+registration, it will be invoked.]]></info>
+      <return type='int' info='0 on success, -1 on error'/>
+      <arg name='conn' type='virAdmConnectPtr' info='pointer to connection object'/>
+      <arg name='cb' type='virAdmConnectCloseFunc' info='pointer to the current registered callback'/>
+    </function>
+    <function name='virAdmGetVersion' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Provides version information. @libVer is the version of the library and will
+always be set unless an error occurs in which case an error code and a
+generic message will be returned. @libVer format is as follows:
+major * 1,000,000 + minor * 1,000 + release.
+
+NOTE: To get the remote side library version use virAdmConnectGetLibVersion
+instead.]]></info>
+      <return type='int' info='0 on success, -1 in case of an error.'/>
+      <arg name='libVer' type='unsigned long long *' info='where to store the library version'/>
+    </function>
+    <function name='virAdmInitialize' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Initialize the library.
+
+This method is automatically invoked by virAdmConnectOpen() API. Therefore,
+in most cases it is unnecessary to call this method manually, unless an
+event loop should be set up by calling virEventRegisterImpl() or the error
+reporting of the first connection attempt with virSetErrorFunc() should be
+altered prior to setting up connections. If the latter is the case, it is
+necessary for the application to call virAdmInitialize.]]></info>
+      <return type='int' info='0 in case of success, -1 in case of error'/>
+    </function>
+    <function name='virAdmServerFree' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Release the server object. The running instance is kept alive.
+The data structure is freed and should not be used thereafter.]]></info>
+      <return type='int' info='0 on success, -1 on failure.'/>
+      <arg name='srv' type='virAdmServerPtr' info='server object'/>
+    </function>
+    <function name='virAdmServerGetClientLimits' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Retrieve client limits from server @srv. These include:
+ - current number of clients connected to @srv,
+ - maximum number of clients connected to @srv,
+ - current number of clients connected to @srv waiting for authentication,
+ - maximum number of clients connected to @srv that can be wainting for
+ authentication.]]></info>
+      <return type='int' info='0 on success, allocating @params to size returned in @nparams, or -1 in case of an error. Caller is responsible for deallocating @params.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='params' type='virTypedParameterPtr *' info='pointer to client limits object (return value, allocated automatically)'/>
+      <arg name='nparams' type='int *' info='pointer to number of parameters returned in @params'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerGetName' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Get the public name for specified server]]></info>
+      <return type='const char *' info='a pointer to the name or NULL. The string doesn&apos;t need to be deallocated since its lifetime will be the same as the server object.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a server object'/>
+    </function>
+    <function name='virAdmServerGetThreadPoolParameters' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Retrieves threadpool parameters from @srv. Upon successful completion,
+@params will be allocated automatically to hold all returned data, setting
+@nparams accordingly.
+When extracting parameters from @params, following search keys are
+supported:
+     VIR_THREADPOOL_WORKERS_MIN
+     VIR_THREADPOOL_WORKERS_MAX
+     VIR_THREADPOOL_WORKERS_PRIORITY
+     VIR_THREADPOOL_WORKERS_FREE
+     VIR_THREADPOOL_WORKERS_CURRENT]]></info>
+      <return type='int' info='0 on success, -1 in case of an error.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='params' type='virTypedParameterPtr *' info='pointer to a list of typed parameters which will be allocated to store all returned parameters'/>
+      <arg name='nparams' type='int *' info='pointer which will hold the number of params returned in @params'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerListClients' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Collect list of all clients connected to daemon on server @srv.]]></info>
+      <return type='int' info='the number of clients connected to daemon on server @srv -1 in case of a failure, setting @clients to NULL. There is a guaranteed extra element set to NULL in the @clients list returned to make the iteration easier, excluding this extra element from the final count. Caller is responsible to call virAdmClientFree() on each list element, followed by freeing @clients.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='clients' type='virAdmClientPtr **' info='pointer to a list to store an array containing objects or NULL if the list is not required (number of clients only)'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerLookupClient' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Try to lookup a client on the given server based on @id.
+
+virAdmClientFree() should be used to free the resources after the
+client object is no longer needed.]]></info>
+      <return type='virAdmClientPtr' info='the requested client or NULL in case of failure.  If the client could not be found, then VIR_ERR_NO_CLIENT error is raised.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='id' type='unsigned long long' info='ID of the client to lookup on server @srv'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerSetClientLimits' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Change client limits configuration on server @srv.
+
+Caller is responsible for allocating @params prior to calling this function.
+See 'Manage per-server client limits' in libvirt-admin.h for
+supported parameters in @params.]]></info>
+      <return type='int' info='0 if the limits have been changed successfully or -1 in case of an error.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='params' type='virTypedParameterPtr' info='pointer to client limits object'/>
+      <arg name='nparams' type='int' info='number of parameters in @params'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerSetThreadPoolParameters' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Change server threadpool parameters according to @params. Note that some
+tunables are read-only, thus any attempt to set them will result in a
+failure.]]></info>
+      <return type='int' info='0 on success, -1 in case of an error.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='params' type='virTypedParameterPtr' info='pointer to threadpool typed parameter objects'/>
+      <arg name='nparams' type='int' info='number of parameters in @params'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+    <function name='virAdmServerUpdateTlsFiles' file='libvirt-admin' module='libvirt-admin'>
+      <info><![CDATA[Notify server to update tls file, such as cacert, cacrl, server cert / key.]]></info>
+      <return type='int' info='0 if the TLS files have been updated successfully or -1 in case of an error.'/>
+      <arg name='srv' type='virAdmServerPtr' info='a valid server object reference'/>
+      <arg name='flags' type='unsigned int' info='extra flags; not used yet, so callers should always pass 0'/>
+    </function>
+  </symbols>
+</api>
