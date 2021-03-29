@@ -3,18 +3,18 @@
     <el-header>
       <el-input
         class="hosts-ip"
-        v-model="hosts.ip"
+        v-model="hosts.host_ip"
         placeholder="输入域名IP地址"
         @keydown.enter.native="enterAddHosts"
-        :disabled="commitIPDisable"
+        :disabled="HostIpDisable"
       >
       </el-input>
       <el-input
         class="hosts-ip"
-        v-model="hosts.hostsaddr"
+        v-model="hosts.host_name"
         placeholder="输入域名"
         @keydown.enter.native="enterAddHosts"
-        :disabled="commithostsaddrDisable"
+        :disabled="HostNameDisable"
       ></el-input>
       <el-button
         class="hosts-btn"
@@ -27,19 +27,18 @@
 
     <el-main>
       <el-table
-        @row-dblclick="modifyDomain"
         height="380"
         :data="tableData"
         style="width: 100%"
       >
         <el-table-column prop="num" label="序号" width="100"></el-table-column>
         <el-table-column
-          prop="addr"
+          prop="host_ip"
           label="IP地址"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="hostsaddr"
+          prop="host_name"
           label="域名"
           width="200"
         ></el-table-column>
@@ -67,35 +66,27 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          // num: '1',
-          // addr: '192.168.8.111',
-          // hostsaddr: 'host.com',
-        },
+        // { num: '1', host_ip: '192.168.8.111', host_name: 'host.com'},
       ],
-
       hosts: {
-        ip: '',
-        hostsaddr: '',
+        host_ip: '',
+        host_name: '',
       },
       btnAddMsg: '添加域名',
       commitBtnDisable: false, // 禁用添加中心按钮
-      commitIPDisable: false, // 禁用IP输入框
-      commithostsaddrDisable: false, // 禁用hostsaddr输入框
+      HostIpDisable: false, // 禁用域名IP输入框
+      HostNameDisable: false, // 禁用域名输入框
     }
   },
 
-  computed: {},
-
   mounted() {
-    let tmpargs = {}
-    hostsipc.send('getallhostsvalue', tmpargs) //首先要获取到后台所有域名的数据
+    hostsipc.send('set_host:get_all_host') //首先要获取到后台所有域名的数据
 
-    let getallhostsvaluefunc = (channel, args) => {
+    let get_all_host_value_fun = (channel, args) => {
       this.tableData = args.data
     }
 
-    let addhostsvaluefunc = (channel, args) => {
+    let add_host_value_fun = (channel, args) => {
       this.addbuttonEnable()
       if (args.status === true) {
         this.$message({
@@ -103,79 +94,70 @@ export default {
           type: 'success',
         })
         // 清除输入框数据
-        this.hosts.ip = ''
-        this.hosts.hostsaddr = ''
+        this.hosts.host_ip = ''
+        this.hosts.host_name = ''
 
-        hostsipc.send('getallhostsvalue', tmpargs) //成功之后重新获取一次数据
+        hostsipc.send('set_host:get_all_host') //成功之后重新获取一次数据
       } else {
         this.$message.error(args.error)
       }
     }
 
-    let delhostsfunc = (channel, args) => {
+    let del_host_value_fun = (channel, args) => {
       if (args.status === false) {
         this.$message.error(args.error)
       } else {
-        let tmpargs = {}
-        hostsipc.send('getallhostsvalue', tmpargs) //删除成功之后重新获取一下数据
-        this.$message({
-          message: '删除域名成功',
-          type: 'success',
-        })
+        hostsipc.send('set_host:get_all_host') //删除成功之后重新获取一下数据
+        this.$message.success('删除域名成功')
       }
     }
 
-    hostsipc.on('getallhostsvalueover', getallhostsvaluefunc)
-    hostsipc.on('addhostsvalueover', addhostsvaluefunc)
-    hostsipc.on('delhostsover', delhostsfunc)
+    hostsipc.on('set_host:get_all_host_bak', get_all_host_value_fun)
+    hostsipc.on('set_host:add_host_bak', add_host_value_fun)
+    hostsipc.on('set_host:del_host_bak', del_host_value_fun)
   },
 
   destroyed() {
-    hostsipc.removeAllListeners('getallhostsvalueover')
-    hostsipc.removeAllListeners('addhostsvalueover')
-    hostsipc.removeAllListeners('delhostsover')
+    hostsipc.removeAllListeners('set_host:get_all_host_bak')
+    hostsipc.removeAllListeners('set_host:add_host_bak')
+    hostsipc.removeAllListeners('set_host:del_host_bak')
   },
 
-  // add by pbc -end
   methods: {
     //添加按钮不可点击函数
     addbuttonDisable() {
       this.btnAddMsg = '添加中...'
       this.commitBtnDisable = true
-      this.commitIPDisable = true
-      this.commithostsaddrDisable = true
+      this.HostIpDisable = true
+      this.HostNameDisable = true
     },
 
     //添加按钮可点击函数
     addbuttonEnable() {
       this.btnAddMsg = '添加域名'
       this.commitBtnDisable = false
-      this.commitIPDisable = false
-      this.commithostsaddrDisable = false
+      this.HostIpDisable = false
+      this.HostNameDisable = false
     },
 
     // 检验输入函数
     checkInput() {
-      if (this.hosts.ip == '') {
+      if (this.hosts.host_ip == '') {
         this.$message.error('IP地址不能为空')
         return false
       }
-      if (this.hosts.hostsaddr == '') {
+      if (this.hosts.host_name == '') {
         this.$message.error('域名不能为空')
         return false
       }
-
       // 检验 - IP地址
       const reg_ip = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-      let retu_ip = reg_ip.test(this.hosts.ip)
-      if (retu_ip) {
-        // this.$message.success('正确IP地址')
-      } else {
+      let retu_ip = reg_ip.test(this.hosts.host_ip)
+      if (retu_ip === false) {
         this.$message.error('IP地址格式不正确')
-        this.hosts.ip = ''
+        this.hosts.host_ip = ''
         return false
       }
-
       return true
     },
 
@@ -186,16 +168,12 @@ export default {
         this.addbuttonEnable()
         return false
       }
-
-      // add by pbc -top
       let hostsvalue = {
-        addr: this.hosts.ip,
-        hostsaddr: this.hosts.hostsaddr,
+        host_ip: this.hosts.host_ip,
+        host_name: this.hosts.host_name,
       }
-      hostsipc.send('addhostsvalue', hostsvalue)
-
+      hostsipc.send('set_host:add_host', hostsvalue)
       this.addbuttonDisable()
-      // add by pbc -end
     },
 
     // 删除表格行
@@ -205,18 +183,14 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
       }).then(() => {
-        let delip =
-          this.tableData[index]['addr'] + this.tableData[index]['hostsaddr']
-        hostsipc.send('delhosts', delip)
+        let host_dic = {
+          host_ip: this.tableData[index]['host_ip'],
+          host_name: this.tableData[index]['host_name'],
+        }
+        hostsipc.send('set_host:del_host', host_dic)
       })
     },
-
-    // 修改域控的值
-    modifyDomain(row, event, column) {
-      row.isInput = !row.isInput
-    },
-
-    // 回车事件 - IP输入框, 端口输入框
+    // 回车事件 - 域名(IP/域名)输入框
     enterAddHosts() {
       this.button_add_hosts()
     },
