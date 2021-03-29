@@ -47,16 +47,15 @@ ipcMain.on('loginvalidate', (data, args) => {
 
     let request_retu = ovirt_api.GET_TOKEN(true,args)
     request_retu.catch((err) => {
-        retuData['error'] = err.toString()
-        try {
-            retuData['error'] = err.response.data.error
-        } catch (e) {
-
+        // err.response.data = {error_code:'access_denied', error:''}
+        console.log('GET_TOKEN:err:', err.response.data)
+        if (
+            err.response.data.error_code == 'access_denied' ||
+            err.response.status == 400
+        ) {
+            retuData.error = '用户名或密码不正确'
         }
-
-        retuData['data'] = ''
-        retuData['status'] = false
-        g_common.mainwindow.webContents.send("loginvalidateover", retuData);
+        g_common.mainwindow.webContents.send('loginvalidateover', retuData)
         return
     }).then((res) => {
         if (typeof (res) === "object") {

@@ -178,10 +178,20 @@ export default {
 
       this.loginbutton_text = '登录中...'
       this.commitBtnDisable = true
+      // 查找域
+      let center_domain = ''
+      for (let index in this.centerinfo) {
+        let item = this.centerinfo[index]
+        if (item.centeripport === this.form.centerip) {
+          center_domain = item.centerdomain
+        }
+      }
+      // 表单数据
       let loginDate = {
         username: this.form.uname,
         password: this.form.passwd,
         centerip: this.form.centerip,
+        domain: center_domain,
       }
       loginipc.send('loginvalidate', loginDate)
     },
@@ -214,9 +224,8 @@ export default {
   },
 
   mounted() {
-    let tmpargs = {}
-    loginipc.send('getallcentervalue', tmpargs) //首先要获取到后台所有中心的数据
-    loginipc.send('getloginstatusdata', tmpargs) //其次先要获取到上次登录的信息反馈到界面进行初四花
+    loginipc.send('getallcentervalue') //首先要获取到后台所有中心的数据
+    loginipc.send('getloginstatusdata') //其次先要获取到上次登录的信息反馈到界面进行初四花
 
     //得到上次登录的状态信息初始化到界面来决定客户端是否自动登录记住密码等操作
     let initloginstatus = (channel, args) => {
