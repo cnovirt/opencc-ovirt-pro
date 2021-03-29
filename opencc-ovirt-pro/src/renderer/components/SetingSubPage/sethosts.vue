@@ -34,9 +34,17 @@
           width="50"
         ></el-table-column>
 
-        <el-table-column prop="host_ip" label="IP地址"></el-table-column>
+        <el-table-column
+          prop="host_ip"
+          label="IP地址"
+          align="center"
+        ></el-table-column>
 
-        <el-table-column prop="host_name" label="域名"></el-table-column>
+        <el-table-column
+          prop="host_name"
+          label="域名"
+          align="center"
+        ></el-table-column>
 
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
