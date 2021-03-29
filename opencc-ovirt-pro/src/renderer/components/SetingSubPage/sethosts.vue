@@ -26,24 +26,19 @@
     </el-header>
 
     <el-main>
-      <el-table
-        height="380"
-        :data="tableData"
-        style="width: 100%"
-      >
-        <el-table-column prop="num" label="序号" width="100"></el-table-column>
+      <el-table height="400" :data="tableData" style="width: 100%">
         <el-table-column
-          prop="host_ip"
-          label="IP地址"
-          width="200"
-        ></el-table-column>
-        <el-table-column
-          prop="host_name"
-          label="域名"
-          width="200"
+          prop="num"
+          label="序号"
+          align="center"
+          width="50"
         ></el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column prop="host_ip" label="IP地址"></el-table-column>
+
+        <el-table-column prop="host_name" label="域名"></el-table-column>
+
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
               size="mini"
