@@ -1,45 +1,50 @@
-//单个虚拟机操作
-const fss = require('fs')
-const os = require('os')
+/**单个虚拟机操作 */
 
-const { ipcMain } = require('electron')
-const g_common = require('./common/commoninfo')
-const myevents = require('events')
 import ovirt_api from './ovirtapi/my_ovirt_api'
-import commands from './common/commands'
+const g_common = require('./common/commoninfo')
+const hostTool = require('./common/hosts_tool')
 
+const fs = require('fs')
+const os = require('os')
+const { ipcMain } = require('electron')
+const myevents = require('events')
 const eventEmitter = new myevents.EventEmitter()
+
+// 默认window客户端
 let remote_viewer_path = '.\\VirtViewer\\bin\\remote-viewer.exe'
 if (os.platform() != 'win32') {
-  remote_viewer_path = '/usr/bin/window'
+  remote_viewer_path = '/usr/bin/remote-viewer'
 }
 let vminfo = {}
 
 //虚拟机所有信息获取完毕
-eventEmitter.on('have_allitem_info', (arg1) => {
-  var fd2 = fss.openSync('./vv.pem', 'w')
-  fss.writeSync(fd2, arg1.ca)
-  fss.closeSync(fd2)
+eventEmitter.on('have_allitem_info', (args) => {
+  var fd2 = fs.openSync('./vv.pem', 'w')
+  fs.writeSync(fd2, args.ca)
+  fs.closeSync(fd2)
+
+  console.log('have_allitem_info', args)
+
+  // 添加主机关联地址
+  hostTool.add_host(args.host_address, args.host_domain)
 
   let entervm_str = remote_viewer_path.concat(
     ' "spice://',
-    arg1.host_domain,
+    args.host_domain,
     '/?tls-port=',
-    arg1.port,
+    args.port,
     '&password=',
-    arg1.ticket,
+    args.ticket,
     '" --spice-ca-file=./vv.pem'
     // ' --spice-debug=true',
-    // ' -f'
+    // ' -f' # 全屏参数
   )
 
   let retuData = { status: true, data: '打开虚拟机已就绪', error: '' }
-  let signal_channel = 'openvmspiceconnectover:' + arg1.id
+  let signal_channel = 'openvmspiceconnectover:' + args.id
   g_common.mainwindow.webContents.send(signal_channel, retuData)
 
   console.log('entervm_str', entervm_str)
-  // commands.getstatusoutput(entervm_str)
-  // console.log("entervm_strover")
 
   var exec = require('child_process').exec,
     last = exec(entervm_str)
@@ -50,15 +55,15 @@ eventEmitter.on('have_allitem_info', (arg1) => {
 
   last.on('exit', function(code) {
     console.log('虚拟机已关闭，退出代码:' + code)
-    let signal_channel = 'openvmspiceconnectover:' + arg1.id
+    let signal_channel = 'openvmspiceconnectover:' + args.id
     if (code === 0) {
       retuData['status'] = true
       retuData['error'] = ''
-      retuData['data'] = '虚拟机（' + arg1.name + '）' + '正常关闭'
+      retuData['data'] = '虚拟机（' + args.name + '）' + '正常关闭'
     } else {
       retuData['status'] = false
       retuData['error'] =
-        '虚拟机（' + arg1.name + '）' + '异常退出，退出码:' + code
+        '虚拟机（' + args.name + '）' + '异常退出，退出码:' + code
       retuData['data'] = ''
     }
     g_common.mainwindow.webContents.send(signal_channel, retuData)
@@ -66,16 +71,16 @@ eventEmitter.on('have_allitem_info', (arg1) => {
 })
 
 //虚拟机开机了的情况 然后开始获取ticket 动态密钥
-eventEmitter.on('signal_vm_isup', (arg1) => {
-  vminfo['name'] = arg1.name
-  vminfo['id'] = arg1.id
-  vminfo['host_address'] = arg1.display.address
-  vminfo['port'] = arg1.display.secure_port
-  vminfo['ca'] = arg1.display.certificate.content
-  vminfo['host_domain'] = arg1.display.certificate.subject.split('CN=')[1]
+eventEmitter.on('signal_vm_isup', (args) => {
+  vminfo['name'] = args.name
+  vminfo['id'] = args.id
+  vminfo['host_address'] = args.display.address
+  vminfo['port'] = args.display.secure_port
+  vminfo['ca'] = args.display.certificate.content
+  vminfo['host_domain'] = args.display.certificate.subject.split('CN=')[1]
 
   let retuData = { status: false, data: '', error: '' }
-  let getticket_retu = ovirt_api.GET_VM_TICKET(arg1.id)
+  let getticket_retu = ovirt_api.GET_VM_TICKET(args.id)
   getticket_retu.then((res) => {
     if (res.status === 200) {
       vminfo['ticket'] = res.data.ticket.value
@@ -107,7 +112,7 @@ ipcMain.on('openvmspiceconnect', (data, args) => {
       let signal_channel = 'openvmspiceconnectover:' + args.vmid
       g_common.mainwindow.webContents.send(signal_channel, retuData)
     }
-    console.log('tmpitmpitmpitmpi', tmpi)
+    console.log('check_vm_status:num:', tmpi)
     let itemvminforetu = ovirt_api.GET_ITEM_VMINFO(args.vmid)
     itemvminforetu.then((res) => {
       if (res.status === 200) {
