@@ -95,11 +95,18 @@ eventEmitter.on('signal_vm_isup', (args) => {
 
 ipcMain.on('openvmspiceconnect', (data, args) => {
   let retuData = { status: false, data: '', error: '' }
+  let signal_channel = 'openvmspiceconnectover:' + args.vmid
+
+  // 检查客户端是否存在
+  let file_exist = fs.existsSync(remote_viewer_path)
+  if (file_exist == false) {
+    retuData.error = '请检查 remote-viewer 客户端是否安装'
+    g_common.mainwindow.webContents.send(signal_channel, retuData)
+    return false
+  }
 
   //在此添加打开虚拟机的一系列操作
-
   let tmpi = 0
-
   let intervalFunc = () => {
     tmpi = tmpi + 1
     if (tmpi >= 30) {
@@ -109,7 +116,6 @@ ipcMain.on('openvmspiceconnect', (data, args) => {
         data: '',
         error: '虚拟机(' + args.name + ')打开超时',
       }
-      let signal_channel = 'openvmspiceconnectover:' + args.vmid
       g_common.mainwindow.webContents.send(signal_channel, retuData)
     }
     console.log('check_vm_status:num:', tmpi)
