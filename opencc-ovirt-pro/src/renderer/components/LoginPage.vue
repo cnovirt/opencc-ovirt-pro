@@ -64,6 +64,7 @@
             v-model="form.passwd"
             type="password"
             placeholder="密码"
+            @keyup.enter.native="button_commit_clicked"
           ></el-input>
         </el-form-item>
 
