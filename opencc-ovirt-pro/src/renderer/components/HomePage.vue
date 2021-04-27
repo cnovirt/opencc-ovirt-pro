@@ -122,6 +122,9 @@ export default {
 
         let tmpcount = 0
         let tmpdict = []
+
+        console.log('getallvminfofunc', args.data)
+
         for (let i = 0; i < args.data.length; i++) {
           let item_info = args.data[i]
           tmpcount = tmpcount + 1

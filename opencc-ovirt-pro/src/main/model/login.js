@@ -58,6 +58,7 @@ ipcMain.on('loginvalidate', (data, args) => {
         g_common.mainwindow.webContents.send('loginvalidateover', retuData)
         return
     }).then((res) => {
+        console.log('GET_TOKEN:res:', res.data)
         if (typeof (res) === "object") {
             let tmpdata = res["data"]
             if (typeof (tmpdata) === "object") {
