@@ -27,7 +27,13 @@ ipcMain.on('getallvminfo', (data, args) => {
   let request_retu = ovirt_api.GET_VMS_INFO()
   request_retu
     .then((res) => {
+      // console.log('getallvminfo', res.data.vm.length)
+      // console.log('getallvminfo:item:', res.data.vm[0])
+
       if (res.status === 200) {
+        // 如果获取列表为空, 返回 false
+        if (res.data === {}) return false
+
         let vmsinfo = []
         let vmList = res.data['vm']
 
@@ -70,6 +76,8 @@ ipcMain.on('getallvminfo', (data, args) => {
       }
     })
     .catch((err) => {
+      console.log('getallvminfo:err:', err.response)
+
       retuData['status'] = false
       retuData['error'] = err.toString()
       g_common.mainwindow.webContents.send('getallvminfoover', retuData)
