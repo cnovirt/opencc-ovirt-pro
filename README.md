@@ -6,8 +6,8 @@
 
 目前支持系统本版 :
 
-- Windows 系统版本
-- Ubuntu 系统版本(Debian 开源系统)
+- Windows 系统
+- Ubuntu 系统
 
 ## 环境配置
 
