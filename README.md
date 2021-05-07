@@ -31,7 +31,7 @@ cd opencc-ovirt-pro-win/opencc-ovirt-pro
 
 # 安装依赖, 可以使用淘宝公共库
 npm config set registry https://registry.npm.taobao.org
-npm install # 如果网络导致下载失败, 可以使用 yarn 安装
+npm install # 使用最高权限,如果网络导致下载失败,可以使用 yarn 安装
 ```
 
 ## 代码运行
@@ -48,14 +48,10 @@ npm run dev
 ```bash
 # 编译代码
 cd opencc-ovirt-pro-win/opencc-ovirt-pro
+# 打包可执行文件
+npm run build:client
+# 打包文件夹
 npm run build:win32
-
-# 运行成功后, 在 ./build 目录下生成打包的工程
-# 将 VirtViewer 文件夹拷贝到打包出来的工程文件夹中, 使用管理权限运行客户端
-
-# 或直接使用脚本打包
-# win_build_client_script.bat : windows打包脚本
-# zip_opencc_ovirt_pro.nsi : nsis压缩安装脚本, 需要配置nsis环境
 
 # 清除打包文件
 npm run build:clean
@@ -64,17 +60,16 @@ npm run build:clean
 ### Ubuntu 打包
 
 ```bash
-# 最好使用 root 权限
 cd opencc-ovirt-pro-win/opencc-ovirt-pro
 
-# 打包成文件夹
-sudo npm run build:linux
 # 打包成可执行程序
 sudo npm run build:client
+# 打包成文件夹
+sudo npm run build:linux
 
-# 安装 virt-viewer 客户端
+# 安装 VirtViewer 客户端
 sudo apt instal virt-viewer -y
-# 检查是否安装成功, 是否启动客户端
+# 检查是否安装成功,是否启动客户端
 remote-viewer
 
 # 进入 ./build 目录, root 权限运行客户端
