@@ -11,7 +11,7 @@
     "build:client": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:darwin": "cross-env BUILD_TARGET=darwin node .electron-vue/build.js",
-    "build:linux": "cross-env BUILD_TARGET=linux node .electron-vue/`build`.js",
+    "build:linux": "cross-env BUILD_TARGET=linux node .electron-vue/build.js",
     "build:mas": "cross-env BUILD_TARGET=mas node .electron-vue/build.js",
     "build:win32": "cross-env BUILD_TARGET=win32 node .electron-vue/build.js",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
@@ -50,10 +50,28 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "extraResources": {
+        "from": "../VirtViewer/",
+        "to": "../VirtViewer"
+      }
     },
     "linux": {
       "icon": "build/icons/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "guid": "opencc_ovirt_pro",
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./build/icons/opencc_logo.ico",
+      "uninstallerIcon": "./build/icons/opencc_logo.ico",
+      "installerHeaderIcon": "./build/icons/opencc_logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "OpenccOvirtPro"
     }
   },
   "dependencies": {
