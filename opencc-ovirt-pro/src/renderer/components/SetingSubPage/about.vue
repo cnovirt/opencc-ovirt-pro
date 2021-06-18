@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .about-text {
-  font-size: 18px;
+  font-size: 16px;
   color: rgba(0, 0, 0, 0.7);
 }
 </style>

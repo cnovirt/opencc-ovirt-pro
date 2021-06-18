@@ -32,6 +32,10 @@ export default new Router({
           component: require('@/components/SetingSubPage/network').default,
         },
         {
+          path: 'config',
+          component: require('@/components/SetingSubPage/config').default,
+        },
+        {
           path: 'about',
           component: require('@/components/SetingSubPage/about').default,
         },

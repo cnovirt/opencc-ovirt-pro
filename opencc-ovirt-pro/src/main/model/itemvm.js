@@ -1,4 +1,5 @@
 /**单个虚拟机操作 */
+import myconfigure from './common/myconfigure'
 
 import ovirt_api from './ovirtapi/my_ovirt_api'
 const g_common = require('./common/commoninfo')
@@ -35,9 +36,9 @@ eventEmitter.on('have_allitem_info', (args) => {
     args.port,
     '&password=',
     args.ticket,
-    '" --spice-ca-file=./vv.pem'
+    '" --spice-ca-file=./vv.pem ',
+    args.full_screen // ' -f' # 全屏参数
     // ' --spice-debug=true',
-    // ' -f' # 全屏参数
   )
 
   let retuData = { status: true, data: '打开虚拟机已就绪', error: '' }
@@ -78,6 +79,15 @@ eventEmitter.on('signal_vm_isup', (args) => {
   vminfo['port'] = args.display.secure_port
   vminfo['ca'] = args.display.certificate.content
   vminfo['host_domain'] = args.display.certificate.subject.split('CN=')[1]
+
+  // 全屏参数
+  vminfo['full_screen'] = '-f'
+  let jv = myconfigure.get_value('full_screen_checked')
+  if (jv === undefined) {
+    myconfigure.update_value('full_screen_checked', true)
+  } else if (jv === false) {
+    vminfo['full_screen'] = ''
+  }
 
   let retuData = { status: false, data: '', error: '' }
   let getticket_retu = ovirt_api.GET_VM_TICKET(args.id)

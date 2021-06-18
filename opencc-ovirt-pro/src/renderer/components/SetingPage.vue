@@ -29,6 +29,11 @@
             <span slot="title">域名</span>
           </el-menu-item>
 
+          <el-menu-item index="/seting/config">
+            <i class="el-icon-s-operation"></i>
+            <span slot="title">高级</span>
+          </el-menu-item>
+
           <el-menu-item index="/seting/about">
             <i class="el-icon-setting"></i>
             <span slot="title">关于</span>

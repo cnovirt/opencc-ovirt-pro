@@ -5,6 +5,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 import './model/login'
 import './model/set_center'
 import './model/set_hosts'
+import './model/set_config'
 import './model/home_page'
 import './model/itemvm'
 import g_mainwindow from './model/common/commoninfo' //保存全局electron声明周期钩子
