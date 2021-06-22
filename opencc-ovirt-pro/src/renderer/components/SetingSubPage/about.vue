@@ -17,7 +17,7 @@ export default {
   name: 'seting-about-page',
   data() {
     return {
-      editionNum: 'V2.1.0.20210330',
+      editionNum: 'V2.1.1.20210622',
     }
   },
 }

@@ -1,7 +1,7 @@
 {
   "name": "opencc-ovirt-pro",
   "productName": "opencc-ovirt-pro",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "wang_song <zero_ws@163.com>",
   "description": "面向企业用户的oVirt开源云桌面客户端windows版本，拥有企业级交互UI设计。",
   "license": "MIT",
