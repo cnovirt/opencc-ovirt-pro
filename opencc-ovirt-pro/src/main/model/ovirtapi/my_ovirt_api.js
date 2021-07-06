@@ -16,7 +16,7 @@ const GET_ITEM_VMINFO = async (vmid) => {
     data: {},
   }
 
-  const api_retu = await request_api(request_dict_args)
+  const api_retu = request_api(request_dict_args)
   return api_retu
 }
 
@@ -39,7 +39,7 @@ const GET_VM_TICKET = async (vmid) => {
     data: '<action><ticket></ticket></action>',
   }
 
-  const api_retu = await request_api(dict_args)
+  const api_retu = request_api(dict_args)
   return api_retu
 }
 
@@ -63,7 +63,7 @@ const ACTION_VM = async (vmid, action) => {
     data: '<action/>',
   }
 
-  const api_retu = await request_api(dict_args)
+  const api_retu = request_api(dict_args)
   return api_retu
 }
 
@@ -104,7 +104,7 @@ const GET_TOKEN = async (isfirst, args) => {
   }
   console.log('GET_TOKEN:dict_args:', dict_args)
 
-  const api_retu = await request_api(dict_args)
+  const api_retu = request_api(dict_args)
   return api_retu
 }
 
@@ -122,7 +122,7 @@ const GET_VMS_INFO = async () => {
     data: {},
   }
 
-  const api_retu = await request_api(dict_args)
+  const api_retu = request_api(dict_args)
   return api_retu
 }
 
@@ -134,7 +134,7 @@ const CHECK_IS_OVIRT_ENGINE = async (centaddr) => {
     headers: {},
     data: {},
   }
-  const api_retu = await request_api(dict_args)
+  const api_retu = request_api(dict_args)
   return api_retu
 }
 
